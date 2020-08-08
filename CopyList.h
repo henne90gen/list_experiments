@@ -3,7 +3,10 @@
 #include <cstring>
 template <typename T> class CopyList {
 public:
-  CopyList() { data = (T *)std::malloc(sizeof(T) * maxSize); }
+  CopyList() { memory = (T *)std::malloc(sizeof(T) * maxSize); }
+  ~CopyList() {
+    std::free(memory);
+  }
 
   unsigned int size() { return currentSize; }
 
@@ -11,21 +14,24 @@ public:
     if (currentSize >= maxSize) {
       resize(maxSize * 2);
     }
-    data[currentSize++] = value;
+    memory[currentSize++] = value;
   }
 
-  T operator[](size_t index) const { return data[index]; }
-  T &operator[](size_t index) { return data[index]; }
+  T operator[](size_t index) const { return memory[index]; }
+  T &operator[](size_t index) { return memory[index]; }
+
+  T *data() { return memory; }
 
 private:
   void resize(size_t newSize) {
     T *newData = (T *)std::malloc(sizeof(T) * newSize);
-    std::memcpy(newData, data, sizeof(T) * currentSize);
-    data = newData;
+    std::memcpy(newData, memory, sizeof(T) * currentSize);
+    std::free(memory);
+    memory = newData;
     maxSize = newSize;
   }
 
-  T *data;
+  T *memory;
   size_t currentSize = 0;
   size_t maxSize = 32;
 };
