@@ -1,8 +1,6 @@
 #pragma once
 
-constexpr size_t BUCKET_SIZE = 64;
-
-template <typename T> class IndirectList {
+template <typename T, size_t BUCKET_SIZE = 128> class IndirectList {
 public:
   IndirectList() {
     buckets = (T **)std::malloc(sizeof(T *) * bucketsCount);
