@@ -5,7 +5,7 @@ constexpr size_t BUCKET_SIZE = 64;
 template <typename T> class IndirectList {
 public:
   IndirectList() {
-    buckets = (T **)std::malloc(sizeof(T *) * bucketsMaxSize);
+    buckets = (T **)std::malloc(sizeof(T *) * bucketsCount);
     buckets[currentBucket] = (T *)std::malloc(sizeof(T) * BUCKET_SIZE);
   }
   ~IndirectList() {
@@ -41,13 +41,13 @@ public:
 
 private:
   void createBucket() {
-    if (currentBucket + 1 >= bucketsMaxSize) {
-      size_t newBucketsMaxSize = bucketsMaxSize * 2;
-      T **newBuckets = (T **)std::malloc(sizeof(T *) * newBucketsMaxSize);
+    if (currentBucket + 1 >= bucketsCount) {
+      size_t newBucketsCount = bucketsCount * 2;
+      T **newBuckets = (T **)std::malloc(sizeof(T *) * newBucketsCount);
       std::memcpy(newBuckets, buckets, sizeof(T *) * (currentBucket + 1));
       std::free(buckets);
       buckets = newBuckets;
-      bucketsMaxSize = newBucketsMaxSize;
+      bucketsCount = newBucketsCount;
     }
     currentBucket++;
     buckets[currentBucket] = (T *)std::malloc(sizeof(T) * BUCKET_SIZE);
@@ -55,7 +55,7 @@ private:
   }
 
   T **buckets;
-  size_t bucketsMaxSize = 64;
+  size_t bucketsCount = 64;
   size_t currentBucket = 0;
   size_t currentBucketSize = 0;
 };

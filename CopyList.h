@@ -4,9 +4,10 @@
 template <typename T> class CopyList {
 public:
   CopyList() { memory = (T *)std::malloc(sizeof(T) * maxSize); }
-  ~CopyList() {
-    std::free(memory);
+  CopyList(size_t maxSize) : maxSize(maxSize) {
+    memory = (T *)std::malloc(sizeof(T) * maxSize);
   }
+  ~CopyList() { std::free(memory); }
 
   unsigned int size() { return currentSize; }
 
